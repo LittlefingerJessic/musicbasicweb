@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>基于Vue开发的网易云音乐播放器</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="searchbar">
+    歌曲搜索：<input type="text" v-model="message" @keyup.enter="search">
+        <ul>
+            <li v-for="item in songlist">{{ item.name }}{{ item.id }}
+                <a href="javascript:;" @click="playmusic(item.id)">爱了爱了</a>
+                <audio id="haochao" :src='mp3' autoplay></audio>
+                <span v-if="item.mvid!=0" @click="playMV(item.mvid)">1</span>
+            </li>
+        </ul>
+    <ul>
+        <li v-for="ite in hotComments">
+            <div><img :src="ite.user.avatarUrl" alt=""></div>
+            <div>{{ ite.nickname }}</div>
+            <div>
+                {{ ite.content }}
+            </div>
+        </li>
+        <img :src="cover" alt="">
+        <div class="video_con" v-show="isShow" style="display: none;">
+            <video :src="mvUrl" controls="controls"></video>
+            <div class="mask" @click="hide">的撒方式的是非得失</div>
+
+        </div>
+    </ul>
+</div>
+</body>
+</html>
+<script>
+    document.getElementById('haochao').volume=0.5;
+    //https://autumnfish.cn/search
+    var app=new Vue({
+        el:'#searchbar',
+        data:{
+            songlist:[],
+            message:'',
+            mp3:'',
+            cover:'',
+            hotComments:[],
+            isPlaying:false,
+            isShow:false,
+            mvUrl:''
+        },
+        methods:{
+            search:function(){
+                var that=this
+                axios.get('https://autumnfish.cn/search?keywords='+this.message)
+                .then(function(response){
+                    var b=response.data.result
+                    console.log(b)
+                    that.songlist=b.songs
+                },function(err){
+                    console.log(err)
+                })
+            }
+        ,playmusic:function(id){
+                var that=this
+                 axios.get('https://autumnfish.cn/song/url?id='+id).then(function(response){
+                     console.log(response.data.data[0].url)
+                     that.mp3=response.data.data[0].url
+                 })
+            axios.get('https://autumnfish.cn/song/detail?ids='+id)
+                .then(function(response){
+                    console.log(response.data.songs[0].al.picUrl)
+                    that.cover=response.data.songs[0].al.picUrl
+                },function(err){})
+                axios.get('https://autumnfish.cn/comment/hot?type=0&id='+id)
+                .then(function(response){
+                    console.log(response.data.hotComments)
+                    that.hotComments=response.data.hotComments
+                },function(err){})
+            },
+            playMV:function(mvid){
+                var that=this
+               axios.get('https://autumnfish.cn/mv/url?id='+mvid)
+                .then(function(response){
+                    console.log(response.data.data.url);
+                    that.isShow=true;
+                    that.mvUrl=response.data.data.url
+                },function(err){})
+            },
+            hide:function(){
+                this.isShow=false
+            }
+        }
+    })
+</script>

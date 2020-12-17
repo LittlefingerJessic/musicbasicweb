@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body{
+            text-align: center;
+            background-color: pink;
+        }
+        .aile{
+            padding-top: 15px;
+            background-color: pink;
+        }
+    </style>
+</head>
+<body>
+<h3>搜索结果如下</h3>
+{% for i in msg %}
+<div><a href="/mymusic/{{ i.song }}by{{ i.singer }}">{{ i.song  }}---{{ i.singer  }}---排名：{{ i.rank }}</a></div>
+{% endfor %}
+</body>
+</html>

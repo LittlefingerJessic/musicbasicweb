@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>搏一搏单车变摩托</title>
+     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <style>
+        body{
+            background-color:#6b6d64;
+        }
+        .boxcontainer {
+            top:50%;
+            left:50%;
+            transform: translate(-50%,-50%);
+            width:800px;
+            height: 600px;
+            position: absolute;
+            border-radius: 10px;
+        }
+        .header{
+            height:50px;
+            width:100%;
+            background-color: #1ba3d4;
+        }
+        .body{
+            height:500px;
+            width:100%;
+            background-color: #dfccab;
+            overflow: scroll;
+        }
+         .foot{
+            height:50px;
+            width:100%;
+             background-color: whitesmoke;
+        }
+        .aile{
+            float:left;
+            padding-top: 10px;
+        }
+        input{
+            margin-left: 500px;
+            border-radius: 10px;
+        }
+        #searchr{
+            width:150px;
+        }
+        .nihao{
+            font-size: 10px;
+        }
+        img{
+            width:30px;
+            height: auto;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+<div class="boxcontainer">
+
+    <div class="header"><div class="aile">真我音乐<input v-model="message" @keyup.enter="search" data-spm-anchor-id="a2oj1.12028025.topnav.i1.5477a51bDhZX9j"></div>
+       </div>
+    <div class="body"><div id="searchr"><div class="nihao glyphicon glyphicon-play" v-for="item in songlist">
+       <a href="javascript:;" @click="playmusic(item.id)"> <img src="../static/难受啊.png" alt=""></a><audio id="haochao" :src='mp3' ></audio>
+        {{ item.name }}<span v-for="xx in item.artists">{{ xx.name }}
+                </span></div></div></div>
+    <div class="foot">
+        <div class="tt"></div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    //https://autumnfish.cn/search
+    var app=new Vue({
+        el:'.boxcontainer',
+        data:{
+            songlist:[],
+            message:'',
+            mp3:'',
+            cover:'',
+            hotComments:[],
+            isPlaying:false,
+            isShow:false,
+            mvUrl:''
+        },
+        methods:{
+            search:function(){
+                var that=this
+                axios.get('https://autumnfish.cn/search?keywords='+this.message)
+                .then(function(response){
+                    var b=response.data.result
+                    console.log(b)
+                    that.songlist=b.songs
+                },function(err){
+                    console.log(err)
+                })
+            }
+        ,playmusic:function(id){
+                var that=this
+                 axios.get('https://autumnfish.cn/song/url?id='+id).then(function(response){
+                     console.log(response.data.data[0].url)
+                     that.mp3=response.data.data[0].url
+                 })
+            axios.get('https://autumnfish.cn/song/detail?ids='+id)
+                .then(function(response){
+                    console.log(response.data.songs[0].al.picUrl)
+                    that.cover=response.data.songs[0].al.picUrl
+                },function(err){})
+                axios.get('https://autumnfish.cn/comment/hot?type=0&id='+id)
+                .then(function(response){
+                    console.log(response.data.hotComments)
+                    that.hotComments=response.data.hotComments
+                },function(err){})
+            },
+            playMV:function(mvid){
+                var that=this
+               axios.get('https://autumnfish.cn/mv/url?id='+mvid)
+                .then(function(response){
+                    console.log(response.data.data.url);
+                    that.isShow=true;
+                    that.mvUrl=response.data.data.url
+                },function(err){})
+            },
+            hide:function(){
+                this.isShow=false
+            }
+        }
+    })
+</script>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎来到注册界面</title>
+    <style>
+        body{
+            margin: 0 auto;
+        }
+        .login{
+            position:absolute;
+            top: 115px;
+            left:940px;
+        }
+        .meisha{
+             position:absolute;
+            top: 180px;
+            left:940px;
+        }
+        form{
+            position:absolute;
+            top:230px;
+            left:940px;
+        }
+        input{
+            border:0;
+            border-bottom: 1px solid #b92c28;
+            font-size: 15px;
+            width:430px;
+        }
+    </style>
+</head>
+<body>
+<div><img src="/static/美女图片嗷.jpg" alt=""><h1 class="login">欢迎登陆真我音乐</h1>
+<h3 class="meisha">真音乐，为生活助力</h3></div>
+<form action="" method="POST">
+    {% csrf_token  %}
+    昵称：<input style="padding-top:25px" type="text" name="nickname"><br>
+    密码：<input style="padding-top:25px" type="password" name="password"><br>
+    <input style="padding-top:25px;border-bottom: none;background-color: white" type='submit' value="提交">
+    <div>{{ msg }}</div>
+</form>
+<div style="position: absolute;padding-left: 940px;top:606px">暂时不开放注册 可以用 用户：Tom，密码：zhenwoyinyue</div>
+</body>
+</html>

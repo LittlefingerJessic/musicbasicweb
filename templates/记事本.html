@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>小黑记事本</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<h2>小黑记事本</h2>
+<div id="aile">
+
+    <div id="nan">
+    <ol>
+        <input type="text"  v-model="message" @keyup.enter="add">
+          {{ message }}
+        <li v-for="(item,index) in list">{{ index+1 }}{{ item }}<button @click="remove(index)">删除</button></li>
+    </ol>
+</div></div>
+</body>
+</html>
+<script>
+    var app=new Vue({
+        el:'#nan',
+        data:{
+            list:['吃饭饭','睡觉觉','打豆豆','敲代码','唱歌'],
+            message:'我爱过你就足够'
+        },
+        methods:{
+            add:function(){
+                this.list.push(this.message)
+            },
+            remove:function(index){
+                console.log('aile')
+                this.list.splice(index,1)
+            }
+        }
+    })
+</script>

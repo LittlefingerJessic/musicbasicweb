@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>网易云播放界面</title>
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <script src="../static/volume.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+        body{
+            z-index:49;
+        }
+        .aa{
+            height:815px;
+            width:1530px;
+            background-color: white;}
+        h3{
+            float:right;
+        }
+        .bb{
+            margin:0 auto;
+            border-radius: 10px;
+        }
+        .cc{
+            position: absolute;
+            top:730px;
+            left:770px;
+            border:2px solid deeppink;
+            height:60px;
+            width:60px;
+            border-radius: 50%;
+        }
+        .dd{
+            padding-left:16px;
+            padding-top: 12px;
+            font-size: 30px;
+        }
+        #lrc{
+            text-align: center;
+            padding-top:158px;
+            z-index:47;
+        }
+        .xxx{
+            display:none;
+            font-size:5px;
+        }
+        .haole:hover input{
+            display: block;
+            float:right;
+        }
+        .haole{
+            padding-top: 10px;
+            float:right;
+            padding-right: 200px;
+        }
+        .jindu{
+            position:absolute;
+            margin-top:700px;
+            margin-left:580px;
+            width:435px;
+            height:2px;
+            background-color: yellow;
+        }
+        .ijk{
+            float:right;
+        }
+        .ggg{
+            position:absolute;
+            margin-top:695px;
+            margin-left:580px;
+            width:10px;
+            height:10px;
+            border-radius: 50%;
+            background-color: green;
+        }
+        .nihaoya{
+            position:absolute;
+            margin-top:700px;
+            margin-left:980px;
+            width:30px;
+            height:25px;
+        }
+        .aileaile{
+            margin:0 auto;
+            text-align: center;
+        }
+        #volume{
+            position:absolute;
+            padding-left:950px;
+            padding-top:740px ;
+        }
+        .adjustvol{
+            width:77px;
+            height:2px;
+            background-color:pink;
+            display:block;
+        }
+        .nangao{
+            position:absolute;
+            padding-left:980px;
+            padding-top: 750px;
+        }
+        #spot{
+            width:10px;
+            height:10px;
+            border-radius: 50%;
+            background-color: darkblue;
+        }
+        #dsfas{
+            padding-left: 35px;
+        }
+    </style>
+</head>
+<body>
+<div class="jindu"><div class="ijk"></div></div><div class="ggg"></div><div class="nihaoya"></div>
+<div class="aa">
+    <div class="bb">
+        <div  id="volume"><img id='voll' src="../static/最大音量.png"></div><div class="nangao"><div class="adjustvol">
+        <div id="dsfas"><div id="spot"></div></div>
+        </div></div>
+        <form method="POST" action="/netease/">
+            {% csrf_token %}
+            <span class="haole glyphicon glyphicon-search">
+                <input class="xxx" type="text" name="search"></span>
+        </form><div class="aileaile">
+ <h4 style="text-align: center;padding-top: 50px">{{ msg.song }}</h4>
+<h5>{{ msg.singer }}</h5></div><div id="lrc"></div><textarea id="aiya" style="display:none">
+{{ msg.lrc }}
+        </textarea><div class="cc">
+        <div class="dd glyphicon glyphicon-play">
+            <audio id='mymusic' src='{{ msg.mp3 }}' ></audio>
+        </div>
+    </div></div></div>
+</body>
+</html>
+<script>
+    function gg() {
+        var hh = document.forms[0];
+        hh.submit();
+    }
+    var a=document.getElementsByClassName('dd')[0]
+    var b=document.getElementById('mymusic')
+    onoff = true;
+    a.onclick=function(){
+        if(onoff){//true
+            b.play()
+            console.log(b.volume)
+            a.className='dd glyphicon glyphicon-pause'}
+        else{//false
+            b.pause()
+            a.className='dd glyphicon glyphicon-play'
+        }
+        onoff=!onoff
+    }
+    var lrc=document.getElementById('aiya').value
+    var aa=lrc.split('[')
+    var geci=[]
+    //console.log(aa)
+    for(var f=0;f<aa.length;f++){
+        var g=aa[f].split(']')
+        geci.push(g)
+    }//找到播放时间，推断出前后歌词
+    //console.log(geci)
+     //console.log(geci[geci.length-1])
+    var ii=document.getElementsByClassName('nihaoya')[0]
+    ii.innerHTML=geci[geci.length-1][0].split('.')[0]
+    var fff=Number(geci[geci.length-1][0].split(':')[0]*60)+Number(geci[geci.length-1][0].split(':')[1])
+    //console.log(fff)
+    b.addEventListener("timeupdate", function(){
+        var nidongde=this.currentTime
+        if(nidongde<60){
+            var k=getlrc(nidongde)
+            //console.log(nidongde)
+            document.getElementById('lrc').innerHTML=geci[k-2][1]+'<br>'+geci[k-1][1]+'<br><div style="color:deeppink">'+geci[k][1]+"</div><br>"+geci[k+1][1]+'<br>'+geci[k+2][1]
+            var hhh=Math.floor((nidongde/fff)*100)
+            var da=hhh/100
+            //[console.log(da*435+580)
+            var dad=da*435+580
+            document.getElementsByClassName('ggg')[0].style.cssText='position:absolute;margin-top:695px;margin-left:'+dad+'px;width:10px;height:10px; border-radius: 50%;background-color: green;'
+            if(nidongde<10){
+                var haha=Math.floor(nidongde)
+                document.getElementsByClassName('jindu')[0].innerHTML='00:0'+haha
+            }else{
+                var haha1=Math.floor(nidongde)
+                document.getElementsByClassName('jindu')[0].innerHTML='00:'+haha1
+            }
+        }
+        if(nidongde>60){
+            var hh=Math.floor(nidongde/60)*100+nidongde%60
+            if(nidongde%60<10){
+                document.getElementsByClassName('jindu')[0].innerHTML='0'+parseInt(nidongde/60)+':0'+Math.floor(nidongde%60)
+            }else{
+                document.getElementsByClassName('jindu')[0].innerHTML='0'+parseInt(nidongde/60)+':'+Math.floor(nidongde%60)
+            }
+            var kk=getlrc(hh)
+            //console.log(geci[kk][0])
+            document.getElementById('lrc').innerHTML=geci[kk-2][1]+'<br>'+geci[kk-1][1]+'<br><div style="color:deeppink">'+geci[kk][1]+"</div><br>"+geci[kk+1][1]+'<br>'+geci[kk+2][1]
+            var hh1=Math.floor((nidongde/fff)*100)
+            var da1=hh1/100
+            var dad1=da1*435+580
+             document.getElementsByClassName('ggg')[0].style.cssText='position:absolute;margin-top:695px;margin-left:'+dad1+'px;width:10px;height:10px; border-radius: 50%;background-color: green;'
+        }
+        //找到播放时间在一个区间显示对应的歌词（需要一个函数来完成
+          }
+    )
+    function getlrc(z){
+        for(var i=0;i<geci.length;i++){
+            if(geci[i][0].replace(/:/,'')<z){
+                if(geci[i+1][0].replace(/:/,'')>z){
+                    return i
+                    //console.log(i)
+                    //console.log(geci[i][1])
+                }
+            }
+        }
+    }
+    var spot=document.getElementById('spot')
+    var bar=document.getElementsByClassName('adjustvol')[0]
+    var cha=bar.offsetWidth-spot.offsetWidth
+    var index=0
+    var dawds=document.getElementById('dsfas')
+    var cax,mouseX,yidong,spotpos,left
+    var evt=new Event("change");//本身的事件
+    init();
+    function init() {
+        spot.addEventListener("mousedown",mouseDownclickHandler);
+        document.addEventListener("mousemove",mouseMoveclickHandler)
+        document.addEventListener("mouseup",mouseUpclickHandler);
+        document.addEventListener("change",changeHandler);
+        bar.addEventListener("click",clickHandler);
+    }
+    function mouseDownclickHandler(e){
+        index=1;
+        cax=spot.offsetLeft;//按钮到控制器的距离
+        mouseX=e.clientX//到左边绝对距离
+    }
+    function mouseMoveclickHandler(e){
+        if(index===1){
+            yidong=e.clientX-mouseX;//鼠标移动距离
+            spotpos=yidong+cax;//按钮的left值
+            if(spotpos<0){
+                spotpos=0;
+            }
+                if(spotpos>cha){
+                    spotpos=cha
+                } dawds.style.paddingLeft=spotpos+'px;'
+            b.volume=(Math.floor((spotpos/67)*100))/100
+                evt.elem=this;//当前指向 对象
+            document.dispatchEvent(evt);//朝谁发送 抛发
+        }
+    }
+     function mouseUpclickHandler(e) {
+        index=0;
+        evt.elem=this;//当前指向 对象
+        document.dispatchEvent(evt);//朝谁发送 抛发
+    }
+     function clickHandler(e) {
+        left = e.clientX-980-spot.offsetWidth/2;
+        if(left<0){
+            left=0;
+        }
+        if(left>=cha){
+            left=cha;
+        }
+        dawds.style.paddingLeft=left+'px';
+        b.volume=(Math.floor((left/67)*100))/100;
+        evt.elem=this;//当前指向 对象
+        document.dispatchEvent(evt);//朝谁发送 抛发
+    }
+     function changeHandler(e) {
+        //console.log(e);
+    }
+</script>

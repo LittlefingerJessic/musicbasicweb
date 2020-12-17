@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/mp3/音乐爬虫模块/ceshi.py" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/mp3/音乐爬虫模块/dbtomysql.py" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/mp3/音乐爬虫模块/歌手.py" dialect="MySQL" />
+  </component>
+</project>

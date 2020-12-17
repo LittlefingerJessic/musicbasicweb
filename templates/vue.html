@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    {{ message }}
+    <div v-text="message"></div>
+    <div v-text="info"></div>
+    <div v-html="ail"></div>
+    <input type='button' value="v-on指令" @click="doit">
+</div>
+<div id="kuai">
+   <ul>
+       <li v-for="item in arr">{{ item }}你好</li>
+   </ul>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</body>
+</html>
+<script>
+    var app=new Vue({
+    el:'#app',
+        methods:{
+        doit:function(){
+            alert('dsfsd')
+        }
+        },
+        data:{
+    message:'Hello world',
+        info:'aileaile',
+            ail:"<a href='#' >我爱你中国</a>"
+        }
+    })
+</script>
+<script>
+    var kuai= new Vue({
+        el:'#kuai',
+        data:{
+            arr:['1','nihao','wga','aileaile']
+        }
+
+    })
+</script>
